@@ -27,8 +27,8 @@ long onewayTime = 42; //----------------------Intervall 2
 long xMillis = 0;
 long onewayMillis = 0;
 //LED Variablen
-int y = 0;
-int x = 0;
+int m_y = 0;
+int m_x = 0;
 int xA = 0;
 int xB = 0;
 int gegenstrecke = kMatrixHeight-1;
@@ -90,18 +90,18 @@ void animation1() {
   currentMillis = millis();
   if (currentMillis - xMillis > xTime) {
       xMillis = currentMillis;
-      ++x;
-      xA = 5 - x;
-      xB = 5 + x;
-      if (x < 0) {
-        x = 0;
-      }else if (x > 5) {
-        x = 0;
-        ++y;
+      ++m_x;
+      xA = 5 - m_x;
+      xB = 5 + m_x;
+      if (m_x < 0) {
+        m_x = 0;
+      }else if (m_x > 5) {
+        m_x = 0;
+        ++m_y;
         //hue++;
         fadeToBlackBy(leds, NUM_LEDS, 20);
-        if (y > kMatrixHeight-1 || y < 0) {
-          y = 0;
+        if (m_y > kMatrixHeight-1 || m_y < 0) {
+          m_y = 0;
         }
       }
     }
@@ -113,8 +113,8 @@ void animation1() {
       }
     }
     
-    leds[ XY(xA, y)] = CHSV( hue++, 255, 255 );
-    leds[ XY(xB, y)] = CHSV( hue, 255, 255 );
+    leds[ XY(xA, m_y)] = CHSV( hue++, 255, 255 );
+    leds[ XY(xB, m_y)] = CHSV( hue, 255, 255 );
     leds[ XY(5, gegenstrecke)] = CHSV( hue, 255, 255 );
     FastLED.show();
     if (hue > 255) {
@@ -123,9 +123,9 @@ void animation1() {
 }
 //----------------------------- Debug Funktion ----------------
 void debug() {
-  Serial.print(y);
+  Serial.print(m_y);
   Serial.print("   ");
-  Serial.print(x);
+  Serial.print(m_x);
   Serial.print("   ");
   Serial.print(gegenstrecke);
   Serial.print("   ");
