@@ -27,8 +27,8 @@ long onewayTime = 42; //----------------------Intervall 2
 long xMillis = 0;
 long onewayMillis = 0;
 //LED Variablen
-int m_y = 0;
-int m_x = 0;
+uint8_t m_y = 0;
+uint8_t m_x = 0;
 int xA = 0;
 int xB = 0;
 int gegenstrecke = kMatrixHeight-1;
@@ -93,23 +93,22 @@ void animation1() {
       ++m_x;
       xA = 5 - m_x;
       xB = 5 + m_x;
-      if (m_x < 0) {
-        m_x = 0;
-      }else if (m_x > 5) {
+      if (m_x > 5) {
         m_x = 0;
         ++m_y;
         //hue++;
         fadeToBlackBy(leds, NUM_LEDS, 20);
-        if (m_y > kMatrixHeight-1 || m_y < 0) {
+        if (m_y > kMatrixHeight-1) {
           m_y = 0;
         }
       }
     }
     if (currentMillis - onewayMillis > onewayTime) {
       onewayMillis = currentMillis;
-      --gegenstrecke;
-      if (gegenstrecke < 0 || gegenstrecke > kMatrixHeight-1) {
+      if (gegenstrecke == 0) {
         gegenstrecke = kMatrixHeight-1;
+      } else {
+        --gegenstrecke;
       }
     }
     
@@ -155,21 +154,15 @@ void powerOff() {
 //------------------------ Matrix definitionen ----------
 
 uint16_t XY(const uint8_t x, const uint8_t y) {
-  uint16_t i;
+  uint16_t i = y * kMatrixWidth;
   
-  if( kMatrixSerpentineLayout == false) {
-    i = (y * kMatrixWidth) + x;
+  if( kMatrixSerpentineLayout == true && y & 0x01) {
+    // Odd rows run backwards
+    i += kMatrixWidth - 1 - x;
   } else {
-    if( y & 0x01) {
-      // Odd rows run backwards
-      uint8_t reverseX = (kMatrixWidth - 1) - x;
-      i = (y * kMatrixWidth) + reverseX;
-    } else {
-      // Even rows run forwards
-      i = (y * kMatrixWidth) + x;
-    }
+    // Even rows run forwards
+    i += x;
   }
-  
   return i;
 }
 
