@@ -8,32 +8,20 @@
 #define BRIGHTNESS 255
 
 // Breite und Höhe
-const uint8_t kMatrixWidth = 11; //----------.Breite
-const uint8_t kMatrixHeight = 17; //----------Höhe
+#define kMatrixWidth 11; //----------.Breite
+#define kMatrixHeight 17; //----------Höhe
 
 #define NUM_LEDS kMatrixWidth*kMatrixHeight;
 
 //Button Variablen
-const int buttonPin1 = 10;//Switch Oben und Mitte 
-const int buttonPin2 = 11; //Switch unten und Mitte
-const int buttonPin3 = 9; //Rot unten
-const int buttonPin4 = 8; // Rot oben
+#define buttonPin1 10;//Switch Oben und Mitte 
+#define buttonPin2 11; //Switch unten und Mitte
+#define buttonPin3 9; //Rot unten
+#define buttonPin4 8; // Rot oben
 
 //Zeit Variablen
-long xTime = 10; //---------------------------Intervall 1
-long onewayTime = 42; //----------------------Intervall 2
-
-//Nicht verändern
-long xMillis = 0;
-long onewayMillis = 0;
-//LED Variablen
-uint8_t m_y = 0;
-uint8_t m_x = 0;
-uint8_t xA = 0;
-uint8_t xB = 0;
-uint8_t gegenstrecke = kMatrixHeight-1;
-static uint8_t hue;
-unsigned long currentMillis = millis();
+#define xTime 10; //---------------------------Intervall 1
+#define onewayTime 42; //----------------------Intervall 2
 
 //------------------------------------------------------
 
@@ -67,14 +55,18 @@ uint16_t XYsafe( const uint8_t x, const uint8_t y)
 
 //----------------------------------LOOP -------------------
 void loop() 
-{
+{ 
+  static uint8_t y;
+  static uint8_t x;
+  static uint8_t gegenstrecke = kMatrixHeight-1;
+  
   //Wenn Schalter oben ist, starte Animation.
   if (digitalRead(buttonPin1) == HIGH) {
     //Wenn der Schalter in der mitte ist, aktiviere debugfunktion
     if (digitalRead(buttonPin2) == HIGH) {
-      debug();
+      debug(y, x, gegenstrecke);
     }
-    animation1();
+    animation1(y, x, gegenstrecke);
   } 
   //LEDs ausschalten, wenn der switch unten ist (Pinkontakt 2+3)
   else if ((digitalRead(buttonPin1) == LOW) && (digitalRead(buttonPin2) == HIGH)) {
@@ -86,43 +78,49 @@ void loop()
 
 
 //-------------------------------Animationsfunktion ------------
-void animation1() {
-  currentMillis = millis();
+void animation1(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke) {
+  static uint8_t xA;
+  static uint8_t xB;
+  static unsigned long xMillis;
+  static long onewayMillis;
+  static uint8_t hue;
+  
+  unsigned long currentMillis = millis();
   if (currentMillis - xMillis > xTime) {
     xMillis = currentMillis;
-    ++m_x;
-    if (m_x > 5) {
-      m_x = 0;
-      ++m_y;
+    ++x;
+    if (x > 5) {
+      x = 0;
+      ++y;
       //hue++;
       fadeToBlackBy(leds, NUM_LEDS, 20);
-      if (m_y > kMatrixHeight-1) {
-        m_y = 0;
+      if (y > kMatrixHeight-1) {
+        y = 0;
       }
     }
-    xA = 5 - m_x;
-    xB = 5 + m_x;
+    xA = 5 - x;
+    xB = 5 + x;
+  }
+  if (currentMillis - onewayMillis > onewayTime) {
+    onewayMillis = currentMillis;
+    if (gegenstrecke == 0) {
+      gegenstrecke = kMatrixHeight-1;
+    } else {
+      --gegenstrecke;
     }
-    if (currentMillis - onewayMillis > onewayTime) {
-      onewayMillis = currentMillis;
-      if (gegenstrecke == 0) {
-        gegenstrecke = kMatrixHeight-1;
-      } else {
-        --gegenstrecke;
-      }
-    }
+  }
     
-    ++hue;
-    leds[ XY(xA, m_y)] = CHSV( hue, 255, 255 );
-    leds[ XY(xB, m_y)] = CHSV( hue, 255, 255 );
-    leds[ XY(5, gegenstrecke)] = CHSV( hue, 255, 255 );
-    FastLED.show();
+  ++hue;
+  leds[ XY(xA, y)] = CHSV( hue, 255, 255 );
+  leds[ XY(xB, y)] = CHSV( hue, 255, 255 );
+  leds[ XY(5, gegenstrecke)] = CHSV( hue, 255, 255 );
+  FastLED.show();
 }
 //----------------------------- Debug Funktion ----------------
-void debug() {
-  Serial.print(m_y);
+void debug(const uint8_t& y, const uint8_t& x, const uint8_t& gegenstrecke) {
+  Serial.print(y);
   Serial.print("   ");
-  Serial.print(m_x);
+  Serial.print(x);
   Serial.print("   ");
   Serial.print(gegenstrecke);
   Serial.print("   ");
@@ -154,7 +152,7 @@ void powerOff() {
 uint16_t XY(const uint8_t x, const uint8_t y) {
   uint16_t returnValue = y * kMatrixWidth;
   
-  if( kMatrixSerpentineLayout == true && y & 0x01) {
+  if( kMatrixSerpentineLayout && y & 0x01) {
     // Odd rows run backwards
     returnValue += kMatrixWidth - 1 - x;
   } else {
