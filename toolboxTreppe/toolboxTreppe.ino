@@ -29,9 +29,9 @@ long onewayMillis = 0;
 //LED Variablen
 uint8_t m_y = 0;
 uint8_t m_x = 0;
-int xA = 0;
-int xB = 0;
-int gegenstrecke = kMatrixHeight-1;
+uint8_t xA = 0;
+uint8_t xB = 0;
+uint8_t gegenstrecke = kMatrixHeight-1;
 static uint8_t hue;
 unsigned long currentMillis = millis();
 
@@ -116,9 +116,6 @@ void animation1() {
     leds[ XY(xB, m_y)] = CHSV( hue, 255, 255 );
     leds[ XY(5, gegenstrecke)] = CHSV( hue, 255, 255 );
     FastLED.show();
-    if (hue > 255) {
-      hue = 0;
-    }
 }
 //----------------------------- Debug Funktion ----------------
 void debug() {
@@ -154,16 +151,16 @@ void powerOff() {
 //------------------------ Matrix definitionen ----------
 
 uint16_t XY(const uint8_t x, const uint8_t y) {
-  uint16_t i = y * kMatrixWidth;
+  uint16_t returnValue = y * kMatrixWidth;
   
   if( kMatrixSerpentineLayout == true && y & 0x01) {
     // Odd rows run backwards
-    i += kMatrixWidth - 1 - x;
+    returnValue += kMatrixWidth - 1 - x;
   } else {
     // Even rows run forwards
-    i += x;
+    returnValue += x;
   }
-  return i;
+  return returnValue;
 }
 
 //---------------------Example Code ------------------------
