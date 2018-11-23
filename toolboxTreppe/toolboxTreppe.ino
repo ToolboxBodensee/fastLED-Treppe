@@ -11,8 +11,6 @@
 #define kMatrixWidth 11; //----------.Breite
 #define kMatrixHeight 17; //----------Höhe
 
-#define NUM_LEDS kMatrixWidth*kMatrixHeight;
-
 //Button Variablen
 #define buttonPin1 10;//Switch Oben und Mitte 
 #define buttonPin2 11; //Switch unten und Mitte
