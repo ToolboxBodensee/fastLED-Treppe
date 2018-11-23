@@ -29,6 +29,10 @@ const bool    kMatrixSerpentineLayout = true;
 CRGB leds_plus_safety_pixel[ NUM_LEDS + 1];
 CRGB* const leds( leds_plus_safety_pixel + 1);
 
+void animation1(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke);
+void debug(const uint8_t& y, const uint8_t& x, const uint8_t& gegenstrecke);
+const uint16_t XYsafe( const uint8_t& x, const uint8_t& y);
+const uint16_t XY(const uint8_t& x, const uint8_t& y);
 
 //--------------------------------SETUP ------------------------
 void setup() {
@@ -41,15 +45,6 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Hello World!");
 }
-
-
-uint16_t XYsafe( const uint8_t x, const uint8_t y)
-{
-  if( x >= kMatrixWidth) return -1;
-  if( y >= kMatrixHeight) return -1;
-  return XY(x,y);
-}
-
 
 //----------------------------------LOOP -------------------
 void loop() 
@@ -146,8 +141,13 @@ void powerOff() {
 }
 
 //------------------------ Matrix definitionen ----------
+const uint16_t XYsafe( const uint8_t& x, const uint8_t& y) {
+  if( x >= kMatrixWidth) return -1;
+  if( y >= kMatrixHeight) return -1;
+  return XY(x,y);
+}
 
-uint16_t XY(const uint8_t x, const uint8_t y) {
+const uint16_t XY(const uint8_t& x, const uint8_t& y) {
   uint16_t returnValue = y * kMatrixWidth;
   
   if( kMatrixSerpentineLayout && y & 0x01) {
