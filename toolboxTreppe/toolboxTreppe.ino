@@ -1,4 +1,5 @@
 #include <FastLED.h>
+#include <stdarg.h>
 
 #define LED_PIN  6
 
@@ -30,7 +31,7 @@ CRGB leds_plus_safety_pixel[ NUM_LEDS + 1];
 CRGB* const leds( leds_plus_safety_pixel + 1);
 
 void animation1(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke);
-void debugPrint(const char* output);
+void debugPrint(const char* output[], ...);
 const uint16_t XY(const uint8_t& x, const uint8_t& y);
 
 //--------------------------------SETUP ------------------------
@@ -68,11 +69,7 @@ void animation1(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke) {
   static uint8_t y;
   static uint8_t x;
   static uint8_t gegenstrecke = kMatrixHeight-1;
-  debugPrint(
-    "x: " + x + "   "
-    + "y: " + y + "   "
-    + "gegenstrecke: " + gegenstrecke
-  );
+  debugPrint("x: %d   y: %d   gegenstrecke: %d", x, y, gegenstrecke);
   
   unsigned long currentMillis = millis();
   if (currentMillis - xMillis > xTime) {
@@ -106,9 +103,10 @@ void animation1(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke) {
 }
 //----------------------------- Debug Funktion ----------------
 
-void debugPrint(const char* output[]) {
+void debugPrint(const char* output[], ...) {
+  va_list args;
   if (digitalRead(buttonPin1) && digitalRead(buttonPin2)) {
-    Serial.println(output);
+    Serial.println(output, args);
   }
 }
 
@@ -131,4 +129,3 @@ const uint16_t XY(const uint8_t& x, const uint8_t& y) {
   }
   return returnValue;
 }
-
