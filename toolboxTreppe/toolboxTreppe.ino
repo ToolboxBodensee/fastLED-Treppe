@@ -30,7 +30,7 @@
 CRGB leds_plus_safety_pixel[ NUM_LEDS + 1];
 CRGB* const leds( leds_plus_safety_pixel + 1);
 
-void animation(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke);
+void animation();
 void debugPrint(const char* output, ...);
 const uint16_t XY(const uint8_t& x, const uint8_t& y);
 
