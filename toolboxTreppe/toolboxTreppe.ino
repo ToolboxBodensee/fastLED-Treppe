@@ -4,34 +4,34 @@
 #define LED_PIN  6
 
 #define COLOR_ORDER GRB
-#define CHIPSET     WS2811
+#define CHIPSET WS2811
 
 #define BRIGHTNESS 255
 
 // Breite und Höhe
-#define kMatrixWidth 11; //----------.Breite
-#define kMatrixHeight 17; //----------Höhe
+#define kMatrixWidth 11 //----------.Breite
+#define kMatrixHeight 17 //----------Höhe
 
 //Button Variablen
-#define buttonPin1 10;//Switch Oben und Mitte 
-#define buttonPin2 11; //Switch unten und Mitte
-#define buttonPin3 9; //Rot unten
-#define buttonPin4 8; // Rot oben
+#define buttonPin1 10//Switch Oben und Mitte 
+#define buttonPin2 11 //Switch unten und Mitte
+#define buttonPin3 9 //Rot unten
+#define buttonPin4 8 // Rot oben
 
 //Zeit Variablen
-#define xTime 10; //---------------------------Intervall 1
-#define onewayTime 42; //----------------------Intervall 2
+#define xTime 10 //---------------------------Intervall 1
+#define onewayTime 42 //----------------------Intervall 2
 
 //------------------------------------------------------
 
 // Param for different pixel layouts
-#define kMatrixSerpentineLayout true;
+#define kMatrixSerpentineLayout true
 #define NUM_LEDS (kMatrixWidth * kMatrixHeight)
 CRGB leds_plus_safety_pixel[ NUM_LEDS + 1];
 CRGB* const leds( leds_plus_safety_pixel + 1);
 
 void animation1(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke);
-void debugPrint(const char* output[], ...);
+void debugPrint(const char* output, ...);
 const uint16_t XY(const uint8_t& x, const uint8_t& y);
 
 //--------------------------------SETUP ------------------------
@@ -51,7 +51,7 @@ void loop()
 { 
   //Wenn Schalter oben ist, starte Animation.
   if (digitalRead(buttonPin1) == HIGH) {
-    animation1(y, x, gegenstrecke);
+    animation();
   } 
   //LEDs ausschalten, wenn der switch unten ist (Pinkontakt 2+3)
   else if (digitalRead(buttonPin2) == HIGH) {
@@ -60,7 +60,7 @@ void loop()
 }
 
 //-------------------------------Animationsfunktion ------------
-void animation1(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke) {
+void animation() {
   static uint8_t xA;
   static uint8_t xB;
   static unsigned long xMillis;
@@ -103,10 +103,11 @@ void animation1(uint8_t& y, uint8_t& x, uint8_t& gegenstrecke) {
 }
 //----------------------------- Debug Funktion ----------------
 
-void debugPrint(const char* output[], ...) {
+void debugPrint(const char* output, ...) {
   va_list args;
-  if (digitalRead(buttonPin1) && digitalRead(buttonPin2)) {
-    Serial.println(output, args);
+  char* buffer;
+  if (digitalRead(buttonPin1) && digitalRead(buttonPin2) && (sprintf (buffer, output, args) >= 0) ) {
+    Serial.println(buffer);
   }
 }
 
