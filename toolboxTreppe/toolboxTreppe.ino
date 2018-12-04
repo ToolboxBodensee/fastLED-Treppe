@@ -105,7 +105,7 @@ void animation() {
 
 void debugPrint(const char* output, ...) {
   va_list args;
-  char* buffer;
+  char buffer[1024];
   if (digitalRead(buttonPin1) && digitalRead(buttonPin2) && (sprintf (buffer, output, args) >= 0) ) {
     Serial.println(buffer);
   }
