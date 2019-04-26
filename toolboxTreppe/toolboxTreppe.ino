@@ -281,11 +281,10 @@ void progressAnimation() {
 }
 
 bool stringHasPrefix(char *s, char* prefix) {
-  while (*prefix != 0) {
-    if (*s == 0 || *s != *prefix) {
+  for(int i = 0; prefix[i] != '\0'; ++i) {
+    if (s[i] == '\0' || s[i] != prefix[i]) {
       return false;
     }
-    s++;
-    prefix++;
   }
+  return true;
 }
