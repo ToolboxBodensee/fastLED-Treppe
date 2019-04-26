@@ -142,15 +142,18 @@ void loop() {
   WiFiClient client = wifiServer.available();
   if (client) {
     Serial.println("TCP client connected");
-    char receiveBuffer[24];
+    char receiveBuffer[25];
     int i = 0;
     while (client.connected()) {
-      while (client.available() > 0 && i < sizeof(receiveBuffer)) {
+      while (client.available() > 0 && i < sizeof(receiveBuffer)-1) {
         receiveBuffer[i] = client.read();
         Serial.print("Received Byte: 0x");
         Serial.println(receiveBuffer[i], HEX);
         i++;
       }
+      //make sure the string ends with 0
+      receiveBuffer[i] = '\0';
+      
       client.stop();
 
       if (stringHasPrefix(receiveBuffer, "open")) {
