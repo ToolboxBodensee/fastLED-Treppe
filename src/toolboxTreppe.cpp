@@ -20,7 +20,7 @@
 void colorChangeAnimation(float progress);
 void animation1(float progress);
 void progressAnimation();
-bool stringHasPrefix(char *s, char* prefix);
+bool stringHasPrefix(const char *s, const char* prefix);
 
 NeoPixelBrightnessBus<NeoBrgFeature, NeoEsp8266Uart1800KbpsMethod> strip(NUM_LEDS, LED_PIN);
 NeoTopology <RowMajorAlternatingLayout> topo(MATRIX_WIDTH, MATRIX_HEIGHT);
@@ -126,7 +126,7 @@ void loop() {
 
   if (!digitalRead(BUTTON_TOP_PIN)) {
     Serial.println("+1");
-    currentAnimation = ++currentAnimation > sizeof(animations) / sizeof(Animation) - 1 ? sizeof(animations) / sizeof(Animation) - 1 : currentAnimation;
+    currentAnimation = ++currentAnimation > (int) (sizeof(animations) / sizeof(Animation)) - 1 ? (int)(sizeof(animations) / sizeof(Animation)) - 1 : currentAnimation;
     Serial.println(currentAnimation);
     while (!digitalRead(BUTTON_TOP_PIN)) {
       delay(10);
@@ -150,7 +150,7 @@ void loop() {
     char receiveBuffer[25];
     int i = 0;
     while (client.connected()) {
-      while (client.available() > 0 && i < sizeof(receiveBuffer)-1) {
+      while (client.available() > 0 && i < (int)sizeof(receiveBuffer) -1) {
         receiveBuffer[i] = client.read();
         Serial.print("Received Byte: 0x");
         Serial.println(receiveBuffer[i], HEX);
@@ -288,7 +288,7 @@ void progressAnimation() {
   strip.Show();
 }
 
-bool stringHasPrefix(char *s, char* prefix) {
+bool stringHasPrefix(const char *s, const char* prefix) {
   for(int i = 0; prefix[i] != '\0'; ++i) {
     if (s[i] == '\0' || s[i] != prefix[i]) {
       return false;
