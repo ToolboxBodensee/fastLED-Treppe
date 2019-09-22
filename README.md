@@ -13,12 +13,6 @@ Für das Projekt wird die **FastLED** Library mit den grundlagen des "XY MATRIX"
 
 ### Arduino-Pinbelegung:
 
-- Pin 6: WS2811 LED streifen
-
-- Pin 8: Roter Knopf oben
-- Pin 9: Roter Knopf unten
-- Pin 10: Kippschalter in Stellung Mitte/Oben
-- Pin 11: Kippschalter in Stellung Mitte/Unten
 
 - VIN: 12V Stromversorgung
 - GND: GND..
