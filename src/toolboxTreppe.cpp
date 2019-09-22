@@ -17,6 +17,11 @@
 #define X_TIME 10
 #define ONE_WAY_TIME 42
 
+void colorChangeAnimation(float progress);
+void animation1(float progress);
+void progressAnimation();
+bool stringHasPrefix(char *s, char* prefix);
+
 NeoPixelBrightnessBus<NeoBrgFeature, NeoEsp8266Uart1800KbpsMethod> strip(NUM_LEDS, LED_PIN);
 NeoTopology <RowMajorAlternatingLayout> topo(MATRIX_WIDTH, MATRIX_HEIGHT);
 

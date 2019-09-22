@@ -1,0 +1,55 @@
+# Continuous Integration (CI) is the practice, in software
+# engineering, of merging all developer working copies with a shared mainline
+# several times a day < https://docs.platformio.org/page/ci/index.html >
+#
+# Documentation:
+#
+# * Travis CI Embedded Builds with PlatformIO
+#   < https://docs.travis-ci.com/user/integration/platformio/ >
+#
+# * PlatformIO integration with Travis CI
+#   < https://docs.platformio.org/page/ci/travis.html >
+#
+# * User Guide for `platformio ci` command
+#   < https://docs.platformio.org/page/userguide/cmd_ci.html >
+#
+
+language: python
+python:
+  - "2.7"
+
+sudo: false
+cache:
+  directories:
+    - "~/.platformio"
+
+install:
+  - pip install -U platformio
+  - platformio update
+
+script:
+  - platformio run -e d1_mini
+  - platformio run -e nodemcu
+  - platformio run -e nodemcuv2
+
+before_deploy:
+  - .travis/deploy.sh
+
+deploy:
+  provider: releases
+  api_key:
+    secure:
+      - "$GITHUB_API_KEY"
+  file:
+    - d1_mini.bin
+    - nodemcu.bin
+    - nodemcuv2.bin
+    - version
+  name: led tunnel OTA update release
+  body: Automatic led tunnel over the air update build of $TRAVIS_BRANCH ($TRAVIS_COMMIT) built by Travis CI on $(date +'%F %T %Z').
+  prerelease: false
+  overwrite: true
+  target_commitish: $TRAVIS_COMMIT
+  skip_cleanup: true
+  on:
+    branch: master
