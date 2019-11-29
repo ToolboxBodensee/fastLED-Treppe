@@ -1,4 +1,6 @@
-# Momentan läuft nicht dieser code, sondern der hier: [ToolboxBodensee/McLighting-Treppe](https://github.com/ToolboxBodensee/McLighting-Treppe)
+# Momentan läuft nicht dieser code, sondern der hier: [ToolboxBodensee/McLighting-Treppe](https://gitlab.com/ToolboxBodensee/die-erleuchteten/McLighting)
+
+**Entwicklung nur auf [GitLab](https://gitlab.com/ToolboxBodensee/die-erleuchteten/fastLED-Treppe). Auf GitHub befindet sich lediglich ein Mirror**
 
 # fastLED-Treppe
 Code für die Steuerung der LEDs, die in der treppe in den 1. Stock eingebaut sind.
